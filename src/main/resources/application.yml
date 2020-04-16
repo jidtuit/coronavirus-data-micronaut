@@ -1,0 +1,9 @@
+---
+micronaut:
+  application:
+    name: coviddata
+  io:
+    watch:
+      paths: src/main
+      restart: true
+
