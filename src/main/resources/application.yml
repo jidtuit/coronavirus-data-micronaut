@@ -6,4 +6,11 @@ micronaut:
     watch:
       paths: src/main
       restart: true
+#  router:
+      #    static-resources:
+        #html:
+      #enabled: true
 
+micronaut.router.static-resources.*.enabled: true
+micronaut.router.static-resources.*.paths: "classpath:public"
+micronaut.router.static-resources.*.mapping: "/**"

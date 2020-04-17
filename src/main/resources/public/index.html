@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hola!</title>
+</head>
+<body>
+    <p>Hola Mundo!!</p>
+    <textarea name="ta" id="ta" cols="30" rows="10"></textarea>
+</body>
+<script>
+    fetch("/covid")
+        .then(data => data.json())
+        .then(json => document.getElementById("ta").textContent = json );
+</script>
+</html>

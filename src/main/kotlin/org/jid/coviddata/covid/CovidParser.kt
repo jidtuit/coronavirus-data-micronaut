@@ -29,8 +29,36 @@ class CovidParser {
                     }
         }
 
-        return covidDataAggregated.asFlow()
+        val covidDataForCountry = calculateCountryValues(covidDataAggregated)
+
+        return covidDataAggregated
+                .union(covidDataForCountry)
+                .asFlow()
     }
+
+    private fun calculateCountryValues(autonomyData: List<CovidData>): List<CovidData> {
+        return autonomyData.groupBy(CovidData::dataDate)
+                .values
+                .map { list ->
+                    list.fold(CovidData("ALL", LocalDate.now())){ acc, item ->
+                        CovidData(
+                                acc.area, // aka "ALL"
+                                item.dataDate,
+                                item.totalCases + acc.totalCases,
+                                item.totalCasesInc + acc.totalCasesInc,
+                                item.hospitalCases + acc.hospitalCases,
+                                item.hospitalCasesInc + acc.hospitalCasesInc,
+                                item.uciCases + acc.uciCases,
+                                item.uciCasesInc + acc.uciCasesInc,
+                                item.deathCases + acc.deathCases,
+                                item.deathCasesInc + acc.deathCasesInc,
+                                item.recoveredCases + acc.recoveredCases,
+                                item.recoveredCasesInc + acc.recoveredCasesInc
+                        )
+                    }
+                }
+    }
+
 
     private fun row2Data(today: CovidDataRow, dayBefore: CovidData? = null) : CovidData {
         return CovidData(today.area,

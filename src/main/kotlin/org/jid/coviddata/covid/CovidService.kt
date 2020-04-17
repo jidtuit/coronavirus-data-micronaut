@@ -16,7 +16,7 @@ class CovidService(private val parser: CovidParser) {
 
     private var cache: CovidServiceCache = runBlocking { getCache() }
 
-    suspend fun getCovidData(): Flow<CovidData> {
+    suspend fun getCovidDataByAutonomyAndCountry(): Flow<CovidData> {
         if(cache.isOutdated()) {
             cache = getCache()
         }

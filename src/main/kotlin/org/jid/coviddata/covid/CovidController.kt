@@ -14,6 +14,34 @@ class CovidController(private val service: CovidService){
     @Get
     @Produces(MediaType.APPLICATION_JSON)
     @Status(HttpStatus.OK)
-    suspend fun covidData(): List<CovidData> = service.getCovidData().toList()
+    suspend fun covidData(): Map<String, List<CovidDataResponse>> {
+        val dataList: List<CovidDataResponse> = service.getCovidDataByAutonomyAndCountry()
+                .toList()
+                .map { it.toResponse() }
 
+        return dataList.groupBy { it.area }
+    }
+}
+
+data class CovidDataResponse(val area: String,
+                             val dataDate: String,
+                             val totalCases:Long,
+                             val totalCasesInc:Long,
+                             val hospitalCases:Long,
+                             val hospitalCasesInc:Long,
+                             val uciCases:Long,
+                             val uciCasesInc:Long,
+                             val deathCases:Long,
+                             val deathCasesInc:Long,
+                             val recoveredCases: Long,
+                             val recoveredCasesInc: Long
+)
+
+private fun CovidData.toResponse(): CovidDataResponse {
+    val isoDate = dataDate.toString()
+
+    return CovidDataResponse(
+            area, isoDate, totalCases, totalCasesInc, hospitalCases, hospitalCasesInc, uciCases, uciCasesInc,
+            deathCases, deathCasesInc, recoveredCases, recoveredCasesInc
+    )
 }
