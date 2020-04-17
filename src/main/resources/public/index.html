@@ -3,14 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Hola!</title>
+    <script defer src="js/lib/Chart.bundle.min.js"></script>
+    <script defer src="js/app.js"></script>
 </head>
 <body>
-    <p>Hola Mundo!!</p>
-    <textarea name="ta" id="ta" cols="30" rows="10"></textarea>
+<h1>Covid Data Spain</h1>
+<div>
+    <div>
+        <label for="regionSelect">Choose region: </label>
+        <select id="regionSelect"></select>
+    </div>
+    <div>
+        <label for="typeSelect">Choose data type: </label>
+        <select id="typeSelect">
+            <option value="delta">Difference from one day to another</option>
+            <option value="absolute">Absolute value in a day</option>
+        </select>
+    </div>
+    <canvas id="myChart" width="400" height="400"></canvas>
+
+</div>
+
 </body>
-<script>
-    fetch("/covid")
-        .then(data => data.json())
-        .then(json => document.getElementById("ta").textContent = json );
-</script>
 </html>
