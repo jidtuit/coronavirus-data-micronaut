@@ -1,39 +1,61 @@
-const isDevMode = true;
-const url = isDevMode ? "fakeData/data.json" : "/covid"
+import { fetchData } from "./modules/utils.js"
+import { loadRegions, initChart, refreshChart } from "./modules/covid.js"
+import { regionsLit, chartTypes } from "./modules/constants.js"
 
-window.addEventListener("DOMContentLoaded", event => {
-    fetchData()
-        .then(data => {
-            loadRegionSelector(data);
-            return data;
-        })
-        .then(data => drawChart(data) );
+const app = new Vue({
+    el: "#myApp",
+    data: {
+        url: "/covid",
+        allData: {},
+        selectedData: {},
+        regions: [],
+        selectedRegion: "ALL",
+        charts: Object.keys(chartTypes),
+        chartsObjs: [],
+        lit: {
+            regions: regionsLit,
+            charts: chartTypes
+        }
+    },
+    methods: {
+        async init() {
+            const data = fetchData(this.url)
+                .catch(reason => console.error("Error fetching data: ", reason));
+
+            this.regions = await loadRegions(this.lit.regions)
+            this.allData = await data;
+            await this.initCharts()
+        },
+        async changeRegion(event) {
+            this.selectedRegion = event.target.selectedOptions[0].value;
+            await this.refreshChart();
+        },
+        async initCharts() {
+            this.selectedData = this.allData[this.selectedRegion];
+            const promises = this.charts.map(c =>
+                initChart(c, this.selectedData, `${this.lit.charts[c]} in ${this.lit.regions[this.selectedRegion]}`)
+            );
+
+            await Promise.all(promises).then(values => {
+                const ret = {};
+                values.forEach(v => ret[v.type] = v.chart);
+                this.chartsObjs = ret;
+            });
+        },
+        async refreshChart() {
+            this.selectedData = this.allData[this.selectedRegion];
+            const promises = this.charts.map(c => {
+                const title = `${this.lit.charts[c]} in ${this.lit.regions[this.selectedRegion]}`;
+                return refreshChart(this.chartsObjs[c], c, this.selectedData, title);
+            });
+
+            await Promise.all(promises)
+        }
+    },
+    computed: {
+    },
+    mounted() {
+        this.init();
+    }
 });
 
-function fetchData() {
-    return fetch(url)
-        .then(response => response.json());
-}
-
-function loadRegionSelector(data) {
-    let select = document.getElementById("regionSelect");
-    let firstOpts = ["ALL", "MD", "CL", "IB"];
-    // Most relevant values
-    firstOpts.map(region => addNode(region, select));
-
-    // All other values
-    Object.keys(data)
-        .filter(region => !firstOpts.includes(region))
-        .map(region => addNode(region, select));
-}
-
-function addNode(region, select) {
-    let node = document.createElement("option");
-    node.text = region;
-    node.value = region;
-    select.add(node);
-}
-
-function drawChart(data) {
-
-}

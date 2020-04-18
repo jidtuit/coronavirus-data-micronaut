@@ -2,27 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hola!</title>
-    <script defer src="js/lib/Chart.bundle.min.js"></script>
-    <script defer src="js/app.js"></script>
+    <title>Covid data for Spain</title>
+    <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-<h1>Covid Data Spain</h1>
-<div>
+<div id="myApp">
+    <h1>Covid Data Spain</h1>
     <div>
-        <label for="regionSelect">Choose region: </label>
-        <select id="regionSelect"></select>
-    </div>
-    <div>
-        <label for="typeSelect">Choose data type: </label>
-        <select id="typeSelect">
-            <option value="delta">Difference from one day to another</option>
-            <option value="absolute">Absolute value in a day</option>
-        </select>
-    </div>
-    <canvas id="myChart" width="400" height="400"></canvas>
+        <div>
+            <label for="regionSelect">Choose a region: </label>
+            <select id="regionSelect" @change="changeRegion">
+                <option v-for="region in regions"
+                        :key="region"
+                        :value="region"
+                        :selected="region === selectedRegion">
+                    {{ lit.regions[region] }}
+                </option>
+            </select>
+        </div>
+        <div class="container">
+            <div v-for="chartId in charts" class="containerItem">
+                <canvas :id="chartId"></canvas>
+            </div>
+        </div>
 
+    </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/lib/Chart.bundle.min.js"></script>
+<script src="js/app.js" type="module"></script>
 </body>
 </html>
