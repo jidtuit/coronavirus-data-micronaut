@@ -8,7 +8,7 @@ plugins {
 
 
 
-version "0.1"
+version "1.0.0"
 group "org.jid"
 mainClassName = "org.jid.CovidDataApp"
 
