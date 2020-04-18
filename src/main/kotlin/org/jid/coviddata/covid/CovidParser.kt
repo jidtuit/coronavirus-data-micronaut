@@ -98,7 +98,10 @@ class CovidParser : Loggable {
     }
 
     private fun isValidRecord(reg: List<String>): Boolean {
-        return reg.size == 7 && reg.isNotEmpty() && reg[0].isNotBlank() && reg[1].isNotBlank()
+        if(reg.size > 7) {
+            log().warn("There are more info in the current record. Please add new columns. Record: {}",reg)
+        }
+        return reg.size >= 7 && reg.isNotEmpty() && reg[0].isNotBlank() && reg[1].isNotBlank()
     }
 
     private fun orElse0(text: String): Long {
