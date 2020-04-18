@@ -2,12 +2,14 @@ package org.jid.coviddata.covid
 
 import kotlinx.coroutines.flow.*
 import org.jid.coviddata.covid.CovidConstants.COVID_DAYS_OF_DATA
+import org.jid.coviddata.utils.logging.Loggable
+import org.jid.coviddata.utils.logging.log
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Singleton
 
 @Singleton
-class CovidParser {
+class CovidParser : Loggable {
 
     private val isoList: List<String> = Autonomy.values().map{ it.iso }
 
@@ -80,16 +82,27 @@ class CovidParser {
     private fun toCovidDataRow(line: String): CovidDataRow? {
         val reg = line.split(",")
 
-        return if(reg.isNotEmpty() && reg[0].isNotBlank() && reg[1].isNotBlank()) {
+        return if(isValidRecord(reg)) {
             CovidDataRow(reg[0].trim(),
                     LocalDate.parse(reg[1], DateTimeFormatter.ofPattern("d/M/yyyy")),
-                    if(reg[2].isNotBlank()) {reg[2].toLong()} else 0,
-                    if(reg[3].isNotBlank()) {reg[3].toLong()} else 0,
-                    if(reg[4].isNotBlank()) {reg[4].toLong()} else 0,
-                    if(reg[5].isNotBlank()) {reg[5].toLong()} else 0,
-                    if(reg[6].isNotBlank()) {reg[6].toLong()} else 0
+                    orElse0(reg[2]),
+                    orElse0(reg[3]),
+                    orElse0(reg[4]),
+                    orElse0(reg[5]),
+                    orElse0(reg[6])
             )
-        } else { null }
+        } else {
+            log().info("Invalid record value: reg = ${reg}")
+            null
+        }
+    }
+
+    private fun isValidRecord(reg: List<String>): Boolean {
+        return reg.size == 7 && reg.isNotEmpty() && reg[0].isNotBlank() && reg[1].isNotBlank()
+    }
+
+    private fun orElse0(text: String): Long {
+        return if(text.isNotBlank()) { text.toLong() } else 0;
     }
 
     private fun isValidData(line: String):Boolean = line.isNotEmpty() &&
