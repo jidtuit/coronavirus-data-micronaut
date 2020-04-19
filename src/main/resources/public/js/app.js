@@ -27,10 +27,10 @@ const app = new Vue({
             const meta = fetchData(this.metadataUrl)
                 .catch(reason => console.error("Error fetching metadata: ", reason));
 
-            this.regions = await loadRegions(this.lit.regions)
+            this.regions = await loadRegions(this.lit.regions);
             this.allData = await data;
-            this.initCharts()
-            this.metadata = await meta
+            this.metadata = await meta;
+            await this.initCharts()
         },
         async changeRegion(event) {
             this.selectedRegion = event.target.selectedOptions[0].value;
@@ -61,7 +61,8 @@ const app = new Vue({
     computed: {
     },
     mounted() {
-        this.init();
+        this.init()
+            .then(() => console.log("Init finished"));
     }
 });
 
