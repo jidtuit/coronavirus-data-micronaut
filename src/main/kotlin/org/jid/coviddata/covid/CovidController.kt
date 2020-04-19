@@ -13,6 +13,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Controller("/covid")
 class CovidController(private val service: CovidService){
@@ -33,10 +34,9 @@ class CovidController(private val service: CovidService){
     @Status(HttpStatus.OK)
     suspend fun covidMetadataInfo(): CovidMetadataInfo {
         val metadata = service.getCovidMetadataInfo()
-        val timezonedIsoDate = metadata.dataFrom
-                .atZone(ZoneId.of(COVID_TIMEZONE))
-                .format(DateTimeFormatter.RFC_1123_DATE_TIME)
-        return CovidMetadataInfo(metadata.notes.toList(), timezonedIsoDate)
+        val dateTime = metadata.dataFrom
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd  hh:mm:ss"))
+        return CovidMetadataInfo(metadata.notes.toList(), dateTime)
     }
 
 }
