@@ -5,6 +5,8 @@ TAG=$2
 IMG_NAME=covid
 REGISTRY=docker.io/"$USER_NAME"/"$IMG_NAME"
 
+./gradlew clean build --info
+
 docker login --username="$USER_NAME"
 
 docker rmi "$USER_NAME"/"$IMG_NAME"
