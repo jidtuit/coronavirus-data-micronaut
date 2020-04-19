@@ -42,6 +42,7 @@ class CovidParser : Loggable {
         return data.lines()
                 .drop(1) // Header
                 .filter { !isValidData(it) }
+                .filter { it.isNotBlank() }
                 .asFlow()
     }
 

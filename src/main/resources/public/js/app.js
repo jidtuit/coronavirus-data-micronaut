@@ -7,7 +7,7 @@ const app = new Vue({
     data: {
         url: "/covid",
         metadataUrl: "/covid/metadata",
-        allData: {},
+        allData: [],
         selectedData: {},
         regions: [],
         selectedRegion: "ALL",
@@ -17,7 +17,7 @@ const app = new Vue({
             regions: regionsLit,
             charts: chartTypes
         },
-        metadata:{}
+        metadata: []
     },
     methods: {
         async init() {
@@ -60,9 +60,8 @@ const app = new Vue({
     },
     computed: {
     },
-    mounted() {
-        this.init()
-            .then(() => console.log("Init finished"));
+    async mounted() {
+        await this.init().then(() => console.log("Init finished"));
     }
 });
 

@@ -1,6 +1,8 @@
 package org.jid.coviddata.covid
 
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class CovidData(val area: String,
                      val dataDate: LocalDate,
@@ -15,6 +17,8 @@ data class CovidData(val area: String,
                      val recoveredCases: Long = 0,
                      val recoveredCasesInc: Long = 0
 )
+
+data class CovidMetadata(val dataUrl: String, val notes: Flow<String>, val dataFrom: LocalDateTime)
 
 enum class Autonomy(val iso:String, name: String) {
 

@@ -21,7 +21,7 @@ class CovidService(private val parser: CovidParser) {
 
     suspend fun getCovidDataByAutonomyAndCountry(): Flow<CovidData> = getFromCache { it.data }
 
-    suspend fun getCovidMetadataInfo(): Flow<String> = getFromCache { it.metadata }
+    suspend fun getCovidMetadataInfo(): CovidMetadata = getFromCache { it.metadata }
 
     private suspend fun <T> getFromCache(f: (CovidServiceCache) -> T ): T {
         if(cache.isOutdated()) {
@@ -31,15 +31,18 @@ class CovidService(private val parser: CovidParser) {
     }
 
     private suspend fun getCache(): CovidServiceCache {
-        val rawData = fetchData(Charset.forName(COVID_DATA_ENCODING))
+        val dataDate = LocalDateTime.now()
+        val rawData = fetchData(COVID_DATA_URL, Charset.forName(COVID_DATA_ENCODING))
+
         val data = parser.parseData(rawData)
-        val metadata = parser.parseMetadataInfo(rawData)
-        return CovidServiceCache(data, metadata)
+        val metadata = CovidMetadata(COVID_DATA_URL, parser.parseMetadataInfo(rawData), dataDate)
+
+        return CovidServiceCache(data, metadata, dataDate)
     }
 
-    private suspend fun fetchData(charset: Charset = StandardCharsets.UTF_8): String = coroutineScope {
+    private suspend fun fetchData(url: String, charset: Charset = StandardCharsets.UTF_8): String = coroutineScope {
         withContext(Dispatchers.IO) {
-            val readText = URL(COVID_DATA_URL).readText(charset)
+            val readText = URL(url).readText(charset)
             //println("readText = ${readText}")
             readText
         }
@@ -47,6 +50,6 @@ class CovidService(private val parser: CovidParser) {
 }
 
 data class CovidServiceCache(val data: Flow<CovidData>,
-                             val metadata: Flow<String>,
+                             val metadata: CovidMetadata,
                              val date: LocalDateTime = LocalDateTime.now())
 fun CovidServiceCache.isOutdated() = this.date.isBefore(LocalDateTime.now().minusMinutes(REFRESH_MINUTES_COVID_DATA))

@@ -8,6 +8,11 @@ import io.micronaut.http.annotation.Produces
 import io.micronaut.http.annotation.Status
 import kotlinx.coroutines.flow.toList
 import org.jid.coviddata.covid.CovidConstants.COVID_DATA_URL
+import org.jid.coviddata.covid.CovidConstants.COVID_TIMEZONE
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @Controller("/covid")
 class CovidController(private val service: CovidService){
@@ -27,8 +32,11 @@ class CovidController(private val service: CovidService){
     @Produces(MediaType.APPLICATION_JSON)
     @Status(HttpStatus.OK)
     suspend fun covidMetadataInfo(): CovidMetadataInfo {
-        val metadata = service.getCovidMetadataInfo().toList()
-        return CovidMetadataInfo(metadata)
+        val metadata = service.getCovidMetadataInfo()
+        val timezonedIsoDate = metadata.dataFrom
+                .atZone(ZoneId.of(COVID_TIMEZONE))
+                .format(DateTimeFormatter.RFC_1123_DATE_TIME)
+        return CovidMetadataInfo(metadata.notes.toList(), timezonedIsoDate)
     }
 
 }
@@ -58,4 +66,5 @@ private fun CovidData.toResponse(): CovidDataResponse {
 
 
 data class CovidMetadataInfo(val notes: List<String>,
+                             val dataDate: String,
                              val dataUrl: String = COVID_DATA_URL)
