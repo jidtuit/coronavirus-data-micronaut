@@ -7,6 +7,7 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.annotation.Status
 import kotlinx.coroutines.flow.toList
+import org.jid.coviddata.covid.CovidConstants.COVID_DATA_URL
 
 @Controller("/covid")
 class CovidController(private val service: CovidService){
@@ -21,6 +22,15 @@ class CovidController(private val service: CovidService){
 
         return dataList.groupBy { it.area }
     }
+
+    @Get("/metadata")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Status(HttpStatus.OK)
+    suspend fun covidMetadataInfo(): CovidMetadataInfo {
+        val metadata = service.getCovidMetadataInfo().toList()
+        return CovidMetadataInfo(metadata)
+    }
+
 }
 
 data class CovidDataResponse(val area: String,
@@ -45,3 +55,7 @@ private fun CovidData.toResponse(): CovidDataResponse {
             deathCases, deathCasesInc, recoveredCases, recoveredCasesInc
     )
 }
+
+
+data class CovidMetadataInfo(val notes: List<String>,
+                             val dataUrl: String = COVID_DATA_URL)

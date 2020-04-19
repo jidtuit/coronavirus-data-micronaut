@@ -5,9 +5,12 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import org.jid.coviddata.covid.CovidConstants.COVID_DATA_ENCODING
 import org.jid.coviddata.covid.CovidConstants.COVID_DATA_URL
 import org.jid.coviddata.covid.CovidConstants.REFRESH_MINUTES_COVID_DATA
 import java.net.URL
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 import javax.inject.Singleton
 
@@ -16,27 +19,34 @@ class CovidService(private val parser: CovidParser) {
 
     private var cache: CovidServiceCache = runBlocking { getCache() }
 
-    suspend fun getCovidDataByAutonomyAndCountry(): Flow<CovidData> {
+    suspend fun getCovidDataByAutonomyAndCountry(): Flow<CovidData> = getFromCache { it.data }
+
+    suspend fun getCovidMetadataInfo(): Flow<String> = getFromCache { it.metadata }
+
+    private suspend fun <T> getFromCache(f: (CovidServiceCache) -> T ): T {
         if(cache.isOutdated()) {
             cache = getCache()
         }
-        return cache.data
+        return f.invoke(cache)
     }
 
     private suspend fun getCache(): CovidServiceCache {
-        val rawData = fetchData()
+        val rawData = fetchData(Charset.forName(COVID_DATA_ENCODING))
         val data = parser.parseData(rawData)
-        return CovidServiceCache(data, LocalDateTime.now())
+        val metadata = parser.parseMetadataInfo(rawData)
+        return CovidServiceCache(data, metadata)
     }
 
-    private suspend fun fetchData(): String = coroutineScope {
+    private suspend fun fetchData(charset: Charset = StandardCharsets.UTF_8): String = coroutineScope {
         withContext(Dispatchers.IO) {
-            val readText = URL(COVID_DATA_URL).readText()
+            val readText = URL(COVID_DATA_URL).readText(charset)
             //println("readText = ${readText}")
             readText
         }
     }
 }
 
-data class CovidServiceCache(val data: Flow<CovidData>, val date: LocalDateTime)
+data class CovidServiceCache(val data: Flow<CovidData>,
+                             val metadata: Flow<String>,
+                             val date: LocalDateTime = LocalDateTime.now())
 fun CovidServiceCache.isOutdated() = this.date.isBefore(LocalDateTime.now().minusMinutes(REFRESH_MINUTES_COVID_DATA))

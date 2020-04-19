@@ -6,6 +6,7 @@ const app = new Vue({
     el: "#myApp",
     data: {
         url: "/covid",
+        metadataUrl: "/covid/metadata",
         allData: {},
         selectedData: {},
         regions: [],
@@ -15,16 +16,21 @@ const app = new Vue({
         lit: {
             regions: regionsLit,
             charts: chartTypes
-        }
+        },
+        metadata:{}
     },
     methods: {
         async init() {
             const data = fetchData(this.url)
                 .catch(reason => console.error("Error fetching data: ", reason));
 
+            const meta = fetchData(this.metadataUrl)
+                .catch(reason => console.error("Error fetching metadata: ", reason));
+
             this.regions = await loadRegions(this.lit.regions)
             this.allData = await data;
-            await this.initCharts()
+            this.initCharts()
+            this.metadata = await meta
         },
         async changeRegion(event) {
             this.selectedRegion = event.target.selectedOptions[0].value;

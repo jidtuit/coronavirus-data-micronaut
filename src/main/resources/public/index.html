@@ -7,8 +7,9 @@
 </head>
 <body>
 <div id="myApp">
-    <h1>Covid Data Spain</h1>
+    <h1>Covid-19 in Spain</h1>
     <div>
+        <h2>Data from the government</h2>
         <div>
             <label for="regionSelect">Choose a region: </label>
             <select id="regionSelect" @change="changeRegion">
@@ -25,7 +26,16 @@
                 <canvas :id="chartId"></canvas>
             </div>
         </div>
-
+        <div>
+            <h2>Considerations about data</h2>
+            <p> Covid-19 Dataset: <a :href="metadata.dataUrl"> {{ metadata.dataUrl }}</a> </p>
+            <p> Data notes: </p>
+            <ul>
+                <li v-for="note in metadata.notes">
+                    {{ note }}
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>

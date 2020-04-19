@@ -38,6 +38,13 @@ class CovidParser : Loggable {
                 .asFlow()
     }
 
+    fun parseMetadataInfo(data: String): Flow<String> {
+        return data.lines()
+                .drop(1) // Header
+                .filter { !isValidData(it) }
+                .asFlow()
+    }
+
     private fun calculateCountryValues(autonomyData: List<CovidData>): List<CovidData> {
         return autonomyData.groupBy(CovidData::dataDate)
                 .values
@@ -92,7 +99,7 @@ class CovidParser : Loggable {
                     orElse0(reg[6])
             )
         } else {
-            log().info("Invalid record value: reg = ${reg}")
+            log().warn("Invalid record value: reg = ${reg}")
             null
         }
     }
