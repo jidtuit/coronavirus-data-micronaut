@@ -7,11 +7,13 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.jid.coviddata.covid.CovidConstants.COVID_DATA_ENCODING
 import org.jid.coviddata.covid.CovidConstants.COVID_DATA_URL
+import org.jid.coviddata.covid.CovidConstants.COVID_TIMEZONE
 import org.jid.coviddata.covid.CovidConstants.REFRESH_MINUTES_COVID_DATA
 import java.net.URL
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
-import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import javax.inject.Singleton
 
 @Singleton
@@ -31,7 +33,7 @@ class CovidService(private val parser: CovidParser) {
     }
 
     private suspend fun getCache(): CovidServiceCache {
-        val dataDate = LocalDateTime.now()
+        val dataDate = ZonedDateTime.now(ZoneId.of(COVID_TIMEZONE))
         val rawData = fetchData(COVID_DATA_URL, Charset.forName(COVID_DATA_ENCODING))
 
         val data = parser.parseData(rawData)
@@ -51,5 +53,7 @@ class CovidService(private val parser: CovidParser) {
 
 data class CovidServiceCache(val data: Flow<CovidData>,
                              val metadata: CovidMetadata,
-                             val date: LocalDateTime = LocalDateTime.now())
-fun CovidServiceCache.isOutdated() = this.date.isBefore(LocalDateTime.now().minusMinutes(REFRESH_MINUTES_COVID_DATA))
+                             val date: ZonedDateTime = ZonedDateTime.now(ZoneId.of(COVID_TIMEZONE)))
+fun CovidServiceCache.isOutdated() = this.date.isBefore(
+        ZonedDateTime.now(ZoneId.of(COVID_TIMEZONE)).minusMinutes(REFRESH_MINUTES_COVID_DATA)
+)

@@ -11,7 +11,7 @@
     <div>
         <h2>Data from the government</h2>
         <div>
-            <p> Covid-19 data last update: {{ metadata.dataDate }}</p>
+            <p> Covid-19 data last update: {{ metadata.dataDate }} </p>
             <label for="regionSelect">Choose a region: </label>
             <select id="regionSelect" @change="changeRegion">
                 <option v-for="region in regions"
@@ -30,7 +30,7 @@
         <div>
             <h2>Considerations about data</h2>
             <p> Covid-19 Dataset: <a :href="metadata.dataUrl"> {{ metadata.dataUrl }}</a> </p>
-            <p> Last update: {{ metadata.dataDate }}</p>
+            <p> Last update: {{ metadata.dataDate }} (spanish timezone)</p>
             <p> Data notes: </p>
             <ul>
                 <li v-for="note in metadata.notes">

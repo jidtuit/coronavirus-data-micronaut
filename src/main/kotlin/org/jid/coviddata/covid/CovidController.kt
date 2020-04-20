@@ -9,11 +9,8 @@ import io.micronaut.http.annotation.Status
 import kotlinx.coroutines.flow.toList
 import org.jid.coviddata.covid.CovidConstants.COVID_DATA_URL
 import org.jid.coviddata.covid.CovidConstants.COVID_TIMEZONE
-import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 
 @Controller("/covid")
 class CovidController(private val service: CovidService){
