@@ -32,7 +32,7 @@ class CovidController(private val service: CovidService){
     suspend fun covidMetadataInfo(): CovidMetadataInfo {
         val metadata = service.getCovidMetadataInfo()
         val dateTime = metadata.dataFrom
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd  hh:mm:ss"))
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss"))
         return CovidMetadataInfo(metadata.notes.toList(), dateTime)
     }
 
