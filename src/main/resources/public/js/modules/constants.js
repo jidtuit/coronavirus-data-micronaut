@@ -31,7 +31,11 @@ const chartTypes = {
     deathCases:"Mortality",
     deathCasesInc:"Mortality daily variation",
     recoveredCases:"Recovered cases",
-    recoveredCasesInc:"Recovered cases daily variation"
+    recoveredCasesInc:"Recovered cases daily variation",
+    pcrPositiveCases: "PCR positive cases",
+    pcrPositiveCasesInc: "PCR positive cases",
+    testAcPositiveCases: "Test AC positive cases daily variation",
+    testAcPositiveCasesInc: "Test AC positive cases daily variation"
 };
 
 const chartColors = {
@@ -44,7 +48,11 @@ const chartColors = {
     deathCases: {bgColor: 'rgba(153, 102, 255, 0.2)', borderColor: 'rgba(153, 102, 255, 1)'},
     deathCasesInc: {bgColor: 'rgba(153, 102, 255, 0.2)', borderColor: 'rgba(153, 102, 255, 1)'},
     recoveredCases: {bgColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 1)'},
-    recoveredCasesInc: {bgColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 1)'}
+    recoveredCasesInc: {bgColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 1)'},
+    pcrPositiveCases: {bgColor: 'rgba(255, 206, 86, 0.2)', borderColor: 'rgba(255, 206, 86, 1)'},
+    pcrPositiveCasesInc: {bgColor: 'rgba(255, 206, 86, 0.2)', borderColor: 'rgba(255, 206, 86, 1)'},
+    testAcPositiveCases: {bgColor: 'rgba(25, 235, 69, 0.2)', borderColor: 'rgba(25, 235, 69, 1)'},
+    testAcPositiveCasesInc: {bgColor: 'rgba(25, 235, 69, 0.2)', borderColor: 'rgba(25, 235, 69, 1)'},
 }
 
 

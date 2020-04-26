@@ -1,6 +1,15 @@
 package org.jid.coviddata.covid
 
 import kotlinx.coroutines.flow.*
+import org.jid.coviddata.covid.CovidConstants.CD_CCAA_INDEX
+import org.jid.coviddata.covid.CovidConstants.CD_DATE_INDEX
+import org.jid.coviddata.covid.CovidConstants.CD_DEATH_INDEX
+import org.jid.coviddata.covid.CovidConstants.CD_HOSPITAL_CASES_INDEX
+import org.jid.coviddata.covid.CovidConstants.CD_PCR_POSITIVE_INDEX
+import org.jid.coviddata.covid.CovidConstants.CD_RECOVERED_INDEX
+import org.jid.coviddata.covid.CovidConstants.CD_TEST_AC_POSITIVE_INDEX
+import org.jid.coviddata.covid.CovidConstants.CD_TOTAL_CASES_INDEX
+import org.jid.coviddata.covid.CovidConstants.CD_UCI_CASES_INDEX
 import org.jid.coviddata.covid.CovidConstants.COVID_DAYS_OF_DATA
 import org.jid.coviddata.utils.logging.Loggable
 import org.jid.coviddata.utils.logging.log
@@ -63,7 +72,11 @@ class CovidParser : Loggable {
                                 item.deathCases + acc.deathCases,
                                 item.deathCasesInc + acc.deathCasesInc,
                                 item.recoveredCases + acc.recoveredCases,
-                                item.recoveredCasesInc + acc.recoveredCasesInc
+                                item.recoveredCasesInc + acc.recoveredCasesInc,
+                                item.pcrPositive + acc.pcrPositive,
+                                item.pcrPositiveInc + acc.pcrPositiveInc,
+                                item.testAcPositive + acc.testAcPositive,
+                                item.testAcPositiveInc + acc.testAcPositiveInc
                         )
                     }
                 }
@@ -82,7 +95,11 @@ class CovidParser : Loggable {
                 today.deathCases,
                 today.deathCases - (dayBefore?.deathCases ?: 0),
                 today.recoveredCases,
-                today.recoveredCases - (dayBefore?.recoveredCases ?: 0)
+                today.recoveredCases - (dayBefore?.recoveredCases ?: 0),
+                today.pcrPositive,
+                today.pcrPositive - (dayBefore?.pcrPositive ?: 0),
+                today.testAcPositive,
+                today.testAcPositive - (dayBefore?.testAcPositive ?: 0)
         )
 
     }
@@ -91,13 +108,15 @@ class CovidParser : Loggable {
         val reg = line.split(",")
 
         return if(isValidRecord(reg)) {
-            CovidDataRow(reg[0].trim(),
-                    LocalDate.parse(reg[1], DateTimeFormatter.ofPattern("d/M/yyyy")),
-                    orElse0(reg[2]),
-                    orElse0(reg[3]),
-                    orElse0(reg[4]),
-                    orElse0(reg[5]),
-                    orElse0(reg[6])
+            CovidDataRow(reg[CD_CCAA_INDEX].trim(),
+                    LocalDate.parse(reg[CD_DATE_INDEX], DateTimeFormatter.ofPattern("d/M/yyyy")),
+                    orElse(reg[CD_TOTAL_CASES_INDEX], orElse0(reg[CD_PCR_POSITIVE_INDEX]) + orElse0(reg[CD_TEST_AC_POSITIVE_INDEX])),
+                    orElse0(reg[CD_HOSPITAL_CASES_INDEX]),
+                    orElse0(reg[CD_UCI_CASES_INDEX]),
+                    orElse0(reg[CD_DEATH_INDEX]),
+                    orElse0(reg[CD_RECOVERED_INDEX]),
+                    orElse0(reg[CD_PCR_POSITIVE_INDEX]),
+                    orElse0(reg[CD_TEST_AC_POSITIVE_INDEX])
             )
         } else {
             log().warn("Invalid record value: reg = ${reg}")
@@ -106,14 +125,18 @@ class CovidParser : Loggable {
     }
 
     private fun isValidRecord(reg: List<String>): Boolean {
-        if(reg.size > 7) {
+        if(reg.size > 9) {
             log().warn("There are more info in the current record. Please add new columns. Record: {}",reg)
         }
-        return reg.size >= 7 && reg.isNotEmpty() && reg[0].isNotBlank() && reg[1].isNotBlank()
+        return reg.size >= 9 && reg.isNotEmpty() && reg[0].isNotBlank() && reg[1].isNotBlank()
     }
 
     private fun orElse0(text: String): Long {
-        return if(text.isNotBlank()) { text.toLong() } else 0;
+        return if(text.isNotBlank()) { text.toLong() } else 0
+    }
+
+    private fun orElse(text: String, default: Long): Long {
+        return if(text.isNotBlank()) { text.toLong() } else default
     }
 
     private fun isValidData(line: String):Boolean = line.isNotEmpty() &&
@@ -127,5 +150,7 @@ private data class CovidDataRow(val area: String,
                         val hospitalCases:Long = 0,
                         val uciCases:Long = 0,
                         val deathCases:Long = 0,
-                        val recoveredCases: Long = 0
+                        val recoveredCases: Long = 0,
+                        val pcrPositive: Long = 0,
+                        val testAcPositive: Long = 0
 )

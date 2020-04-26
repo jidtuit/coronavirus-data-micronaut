@@ -12,4 +12,14 @@ object CovidConstants {
     const val COVID_DAYS_OF_DATA: Long = 50
     const val COVID_TIMEZONE = "Europe/Madrid"
 
+    const val CD_CCAA_INDEX = 0
+    const val CD_DATE_INDEX = 1
+    const val CD_TOTAL_CASES_INDEX = 2
+    const val CD_PCR_POSITIVE_INDEX = 3
+    const val CD_TEST_AC_POSITIVE_INDEX = 4
+    const val CD_HOSPITAL_CASES_INDEX = 5
+    const val CD_UCI_CASES_INDEX = 6
+    const val CD_DEATH_INDEX = 7
+    const val CD_RECOVERED_INDEX = 8
+
 }

@@ -49,7 +49,11 @@ data class CovidDataResponse(val area: String,
                              val deathCases:Long,
                              val deathCasesInc:Long,
                              val recoveredCases: Long,
-                             val recoveredCasesInc: Long
+                             val recoveredCasesInc: Long,
+                             val pcrPositiveCases:Long,
+                             val pcrPositiveCasesInc:Long,
+                             val testAcPositiveCases:Long,
+                             val testAcPositiveCasesInc:Long
 )
 
 private fun CovidData.toResponse(): CovidDataResponse {
@@ -57,7 +61,8 @@ private fun CovidData.toResponse(): CovidDataResponse {
 
     return CovidDataResponse(
             area, isoDate, totalCases, totalCasesInc, hospitalCases, hospitalCasesInc, uciCases, uciCasesInc,
-            deathCases, deathCasesInc, recoveredCases, recoveredCasesInc
+            deathCases, deathCasesInc, recoveredCases, recoveredCasesInc, pcrPositive, pcrPositiveInc,
+            testAcPositive, testAcPositiveInc
     )
 }
 
