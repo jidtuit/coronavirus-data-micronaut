@@ -60,8 +60,8 @@ const app = new Vue({
     },
     computed: {
     },
-    async mounted() {
-        await this.init().then(() => console.log("Init finished"));
+    mounted() {
+        this.init().then(() => console.log("Init finished"));
     }
 });
 
