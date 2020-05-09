@@ -31,6 +31,8 @@
             <h2>Considerations about data</h2>
             <p> Covid-19 Dataset: <a :href="metadata.dataUrl"> {{ metadata.dataUrl }}</a> </p>
             <p> Last update: {{ metadata.dataDate }} (spanish timezone)</p>
+            <p> The daily variations for Madrid have been modified. The highest value has been removed to avoid the
+                "change in criteria effect". The only exception for this is the recovered cases daily variation</p>
             <p> Data notes: </p>
             <ul>
                 <li v-for="note in metadata.notes">

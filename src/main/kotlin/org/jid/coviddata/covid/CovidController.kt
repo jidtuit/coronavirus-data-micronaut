@@ -7,9 +7,9 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.annotation.Status
 import kotlinx.coroutines.flow.toList
+import org.jid.coviddata.covid.Autonomy.MADRID
 import org.jid.coviddata.covid.CovidConstants.COVID_DATA_URL
-import org.jid.coviddata.covid.CovidConstants.COVID_TIMEZONE
-import java.time.ZoneId
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Controller("/covid")
@@ -19,11 +19,12 @@ class CovidController(private val service: CovidService){
     @Produces(MediaType.APPLICATION_JSON)
     @Status(HttpStatus.OK)
     suspend fun covidData(): Map<String, List<CovidDataResponse>> {
-        val dataList: List<CovidDataResponse> = service.getCovidDataByAutonomyAndCountry()
+        val dataList = service.getCovidDataByAutonomyAndCountry()
                 .toList()
-                .map { it.toResponse() }
+        val firstDate = dataList[0].dataDate
+        val responseList = dataList.map { it.toResponse(firstDate) }
 
-        return dataList.groupBy { it.area }
+        return responseList.groupBy { it.area }
     }
 
     @Get("/metadata")
@@ -56,14 +57,38 @@ data class CovidDataResponse(val area: String,
                              val testAcPositiveCasesInc:Long
 )
 
-private fun CovidData.toResponse(): CovidDataResponse {
+private fun CovidData.toResponse(firstElementDate: LocalDate): CovidDataResponse {
+    // Format date for browser
     val isoDate = dataDate.toString()
 
+    // Remove first element in daily variations
+    val newTotalCasesInc = or0IfFirstElement(totalCasesInc, firstElementDate)
+    var newHospitalCasesInc = or0IfFirstElement(hospitalCasesInc, firstElementDate)
+    var newUciCasesInc = or0IfFirstElement(uciCasesInc, firstElementDate)
+    val newDeathCasesInc = or0IfFirstElement(deathCasesInc, firstElementDate)
+    val newRecoveredCasesInc = or0IfFirstElement(recoveredCasesInc, firstElementDate)
+    val newPcrPositiveInc = or0IfFirstElement(pcrPositiveInc, firstElementDate)
+    var newTestAcPositiveInc = or0IfFirstElement(testAcPositiveInc, firstElementDate)
+
+    // Data exceptions to improve visualization
+    newHospitalCasesInc = or0ByAreaAndDate(newHospitalCasesInc, MADRID, 2020, 4, 26)
+    newUciCasesInc = or0ByAreaAndDate(newUciCasesInc, MADRID, 2020, 4, 26)
+    newTestAcPositiveInc = or0ByAreaAndDate(newTestAcPositiveInc, MADRID, 2020, 4, 18)
+
+
     return CovidDataResponse(
-            area, isoDate, totalCases, totalCasesInc, hospitalCases, hospitalCasesInc, uciCases, uciCasesInc,
-            deathCases, deathCasesInc, recoveredCases, recoveredCasesInc, pcrPositive, pcrPositiveInc,
-            testAcPositive, testAcPositiveInc
+            area, isoDate, totalCases, newTotalCasesInc, hospitalCases, newHospitalCasesInc, uciCases, newUciCasesInc,
+            deathCases, newDeathCasesInc, recoveredCases, newRecoveredCasesInc, pcrPositive, newPcrPositiveInc,
+            testAcPositive, newTestAcPositiveInc
     )
+}
+
+private fun CovidData.or0ByAreaAndDate(other: Long, aut: Autonomy, year: Int, month: Int, day: Int): Long {
+    return if(area == aut.iso && dataDate.isEqual(LocalDate.of(year, month, day))) 0 else other
+}
+
+private fun CovidData.or0IfFirstElement(other: Long, firstElementDate: LocalDate): Long {
+    return if(dataDate.isEqual(firstElementDate)) 0 else other
 }
 
 
