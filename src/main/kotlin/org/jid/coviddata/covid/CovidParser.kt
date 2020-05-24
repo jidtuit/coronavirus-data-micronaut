@@ -6,7 +6,6 @@ import org.jid.coviddata.covid.CovidConstants.CD_DATE_INDEX
 import org.jid.coviddata.covid.CovidConstants.CD_DEATH_INDEX
 import org.jid.coviddata.covid.CovidConstants.CD_HOSPITAL_CASES_INDEX
 import org.jid.coviddata.covid.CovidConstants.CD_PCR_POSITIVE_INDEX
-import org.jid.coviddata.covid.CovidConstants.CD_RECOVERED_INDEX
 import org.jid.coviddata.covid.CovidConstants.CD_TEST_AC_POSITIVE_INDEX
 import org.jid.coviddata.covid.CovidConstants.CD_TOTAL_CASES_INDEX
 import org.jid.coviddata.covid.CovidConstants.CD_UCI_CASES_INDEX
@@ -71,8 +70,6 @@ class CovidParser : Loggable {
                                 item.uciCasesInc + acc.uciCasesInc,
                                 item.deathCases + acc.deathCases,
                                 item.deathCasesInc + acc.deathCasesInc,
-                                item.recoveredCases + acc.recoveredCases,
-                                item.recoveredCasesInc + acc.recoveredCasesInc,
                                 item.pcrPositive + acc.pcrPositive,
                                 item.pcrPositiveInc + acc.pcrPositiveInc,
                                 item.testAcPositive + acc.testAcPositive,
@@ -94,8 +91,6 @@ class CovidParser : Loggable {
                 today.uciCases - (dayBefore?.uciCases ?: 0),
                 today.deathCases,
                 today.deathCases - (dayBefore?.deathCases ?: 0),
-                today.recoveredCases,
-                today.recoveredCases - (dayBefore?.recoveredCases ?: 0),
                 today.pcrPositive,
                 today.pcrPositive - (dayBefore?.pcrPositive ?: 0),
                 today.testAcPositive,
@@ -114,7 +109,6 @@ class CovidParser : Loggable {
                     orElse0(reg[CD_HOSPITAL_CASES_INDEX]),
                     orElse0(reg[CD_UCI_CASES_INDEX]),
                     orElse0(reg[CD_DEATH_INDEX]),
-                    orElse0(reg[CD_RECOVERED_INDEX]),
                     orElse0(reg[CD_PCR_POSITIVE_INDEX]),
                     orElse0(reg[CD_TEST_AC_POSITIVE_INDEX])
             )
@@ -128,7 +122,7 @@ class CovidParser : Loggable {
         if(reg.size > 9) {
             log().warn("There are more info in the current record. Please add new columns. Record: {}",reg)
         }
-        return reg.size >= 9 && reg.isNotEmpty() && reg[0].isNotBlank() && reg[1].isNotBlank()
+        return reg.size >= 8 && reg.isNotEmpty() && reg[0].isNotBlank() && reg[1].isNotBlank()
     }
 
     private fun orElse0(text: String): Long {
@@ -150,7 +144,6 @@ private data class CovidDataRow(val area: String,
                         val hospitalCases:Long = 0,
                         val uciCases:Long = 0,
                         val deathCases:Long = 0,
-                        val recoveredCases: Long = 0,
                         val pcrPositive: Long = 0,
                         val testAcPositive: Long = 0
 )

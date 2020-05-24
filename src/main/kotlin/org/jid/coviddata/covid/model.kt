@@ -14,19 +14,15 @@ data class CovidData(val area: String,
                      val uciCasesInc:Long = 0,
                      val deathCases:Long = 0,
                      val deathCasesInc:Long = 0,
-                     val recoveredCases: Long = 0,
-                     val recoveredCasesInc: Long = 0,
                      val pcrPositive: Long = 0,
                      val pcrPositiveInc: Long = 0,
                      val testAcPositive: Long = 0,
                      val testAcPositiveInc: Long = 0
-
 )
 
 data class CovidMetadata(val dataUrl: String, val notes: Flow<String>, val dataFrom: ZonedDateTime)
 
 enum class Autonomy(val iso:String, name: String) {
-
     ANDALUCIA("AN", "ANDALUCÍA"),
     ARAGON("AR", "ARAGÓN"),
     ASTURIAS("AS", "ASTURIAS"),

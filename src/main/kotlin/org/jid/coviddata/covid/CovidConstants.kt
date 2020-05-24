@@ -21,6 +21,5 @@ object CovidConstants {
     const val CD_HOSPITAL_CASES_INDEX = 5
     const val CD_UCI_CASES_INDEX = 6
     const val CD_DEATH_INDEX = 7
-    const val CD_RECOVERED_INDEX = 8
 
 }

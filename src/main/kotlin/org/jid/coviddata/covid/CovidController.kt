@@ -49,8 +49,6 @@ data class CovidDataResponse(val area: String,
                              val uciCasesInc:Long,
                              val deathCases:Long,
                              val deathCasesInc:Long,
-                             val recoveredCases: Long,
-                             val recoveredCasesInc: Long,
                              val pcrPositiveCases:Long,
                              val pcrPositiveCasesInc:Long,
                              val testAcPositiveCases:Long,
@@ -66,7 +64,6 @@ private fun CovidData.toResponse(firstElementDate: LocalDate): CovidDataResponse
     var newHospitalCasesInc = or0IfFirstElement(hospitalCasesInc, firstElementDate)
     var newUciCasesInc = or0IfFirstElement(uciCasesInc, firstElementDate)
     val newDeathCasesInc = or0IfFirstElement(deathCasesInc, firstElementDate)
-    val newRecoveredCasesInc = or0IfFirstElement(recoveredCasesInc, firstElementDate)
     val newPcrPositiveInc = or0IfFirstElement(pcrPositiveInc, firstElementDate)
     var newTestAcPositiveInc = or0IfFirstElement(testAcPositiveInc, firstElementDate)
 
@@ -78,7 +75,7 @@ private fun CovidData.toResponse(firstElementDate: LocalDate): CovidDataResponse
 
     return CovidDataResponse(
             area, isoDate, totalCases, newTotalCasesInc, hospitalCases, newHospitalCasesInc, uciCases, newUciCasesInc,
-            deathCases, newDeathCasesInc, recoveredCases, newRecoveredCasesInc, pcrPositive, newPcrPositiveInc,
+            deathCases, newDeathCasesInc, pcrPositive, newPcrPositiveInc,
             testAcPositive, newTestAcPositiveInc
     )
 }
