@@ -1,4 +1,4 @@
-package org.jid.coviddata.covid
+package org.jid.coviddata.isciiiold
 
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate

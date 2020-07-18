@@ -1,4 +1,4 @@
-package org.jid.coviddata.covid
+package org.jid.coviddata.isciiiold
 
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
@@ -7,8 +7,8 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.annotation.Status
 import kotlinx.coroutines.flow.toList
-import org.jid.coviddata.covid.Autonomy.MADRID
-import org.jid.coviddata.covid.CovidConstants.COVID_DATA_URL
+import org.jid.coviddata.isciiiold.Autonomy.MADRID
+import org.jid.coviddata.isciiiold.CovidConstants.COVID_DATA_URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

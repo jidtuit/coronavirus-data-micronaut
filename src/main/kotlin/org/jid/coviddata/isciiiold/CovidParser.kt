@@ -1,15 +1,15 @@
-package org.jid.coviddata.covid
+package org.jid.coviddata.isciiiold
 
 import kotlinx.coroutines.flow.*
-import org.jid.coviddata.covid.CovidConstants.CD_CCAA_INDEX
-import org.jid.coviddata.covid.CovidConstants.CD_DATE_INDEX
-import org.jid.coviddata.covid.CovidConstants.CD_DEATH_INDEX
-import org.jid.coviddata.covid.CovidConstants.CD_HOSPITAL_CASES_INDEX
-import org.jid.coviddata.covid.CovidConstants.CD_PCR_POSITIVE_INDEX
-import org.jid.coviddata.covid.CovidConstants.CD_TEST_AC_POSITIVE_INDEX
-import org.jid.coviddata.covid.CovidConstants.CD_TOTAL_CASES_INDEX
-import org.jid.coviddata.covid.CovidConstants.CD_UCI_CASES_INDEX
-import org.jid.coviddata.covid.CovidConstants.COVID_DAYS_OF_DATA
+import org.jid.coviddata.isciiiold.CovidConstants.CD_CCAA_INDEX
+import org.jid.coviddata.isciiiold.CovidConstants.CD_DATE_INDEX
+import org.jid.coviddata.isciiiold.CovidConstants.CD_DEATH_INDEX
+import org.jid.coviddata.isciiiold.CovidConstants.CD_HOSPITAL_CASES_INDEX
+import org.jid.coviddata.isciiiold.CovidConstants.CD_PCR_POSITIVE_INDEX
+import org.jid.coviddata.isciiiold.CovidConstants.CD_TEST_AC_POSITIVE_INDEX
+import org.jid.coviddata.isciiiold.CovidConstants.CD_TOTAL_CASES_INDEX
+import org.jid.coviddata.isciiiold.CovidConstants.CD_UCI_CASES_INDEX
+import org.jid.coviddata.isciiiold.CovidConstants.COVID_DAYS_OF_DATA
 import org.jid.coviddata.utils.logging.Loggable
 import org.jid.coviddata.utils.logging.log
 import java.time.LocalDate
@@ -84,7 +84,7 @@ class CovidParser : Loggable {
         return CovidData(today.area,
                 today.dataDate,
                 today.totalCases,
-                today.totalCases - (dayBefore?.totalCases ?: 0) ,
+                today.totalCases - (dayBefore?.totalCases ?: 0),
                 today.hospitalCases,
                 today.hospitalCases - (dayBefore?.hospitalCases ?: 0),
                 today.uciCases,

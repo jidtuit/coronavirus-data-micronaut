@@ -1,7 +1,4 @@
-package org.jid.coviddata.covid
-
-import io.micronaut.http.MediaType
-import java.nio.charset.StandardCharsets
+package org.jid.coviddata.isciiiold
 
 object CovidConstants {
 

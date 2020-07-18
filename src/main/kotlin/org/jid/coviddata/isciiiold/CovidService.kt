@@ -1,14 +1,14 @@
-package org.jid.coviddata.covid
+package org.jid.coviddata.isciiiold
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import org.jid.coviddata.covid.CovidConstants.COVID_DATA_ENCODING
-import org.jid.coviddata.covid.CovidConstants.COVID_DATA_URL
-import org.jid.coviddata.covid.CovidConstants.COVID_TIMEZONE
-import org.jid.coviddata.covid.CovidConstants.REFRESH_MINUTES_COVID_DATA
+import org.jid.coviddata.isciiiold.CovidConstants.COVID_DATA_ENCODING
+import org.jid.coviddata.isciiiold.CovidConstants.COVID_DATA_URL
+import org.jid.coviddata.isciiiold.CovidConstants.COVID_TIMEZONE
+import org.jid.coviddata.isciiiold.CovidConstants.REFRESH_MINUTES_COVID_DATA
 import java.net.URL
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
