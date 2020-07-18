@@ -1,4 +1,4 @@
-package org.jid.coviddata.isciiiold
+package org.jid.coviddata.isciiicurrent
 
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
@@ -7,12 +7,12 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import io.micronaut.http.annotation.Status
 import kotlinx.coroutines.flow.toList
-import org.jid.coviddata.isciiiold.Autonomy.MADRID
-import org.jid.coviddata.isciiiold.CovidConstants.COVID_DATA_URL
+import org.jid.coviddata.isciiicurrent.Autonomy.MADRID
+import org.jid.coviddata.isciiicurrent.CovidConstants.COVID_DATA_URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@Controller("/covid/isciii-old")
+@Controller("/covid/isciii-current")
 class CovidController(private val service: CovidService){
 
     @Get
@@ -23,8 +23,6 @@ class CovidController(private val service: CovidService){
                 .toList()
         val firstDate = dataList[0].dataDate
         val responseList = dataList.map { it.toResponse(firstDate) }
-
-        print("hola mundo")
 
         return responseList.groupBy { it.area }
     }
@@ -45,16 +43,14 @@ data class CovidDataResponse(val area: String,
                              val dataDate: String,
                              val totalCases:Long,
                              val totalCasesInc:Long,
-                             val hospitalCases:Long,
-                             val hospitalCasesInc:Long,
-                             val uciCases:Long,
-                             val uciCasesInc:Long,
-                             val deathCases:Long,
-                             val deathCasesInc:Long,
                              val pcrPositiveCases:Long,
                              val pcrPositiveCasesInc:Long,
                              val testAcPositiveCases:Long,
-                             val testAcPositiveCasesInc:Long
+                             val testAcPositiveCasesInc:Long,
+                             val otherPositiveCases:Long,
+                             val otherPositiveCasesInc:Long,
+                             val unknownPositiveCases:Long,
+                             val unknownPositiveCasesInc:Long
 )
 
 private fun CovidData.toResponse(firstElementDate: LocalDate): CovidDataResponse {
@@ -63,22 +59,19 @@ private fun CovidData.toResponse(firstElementDate: LocalDate): CovidDataResponse
 
     // Remove first element in daily variations
     val newTotalCasesInc = or0IfFirstElement(totalCasesInc, firstElementDate)
-    var newHospitalCasesInc = or0IfFirstElement(hospitalCasesInc, firstElementDate)
-    var newUciCasesInc = or0IfFirstElement(uciCasesInc, firstElementDate)
-    val newDeathCasesInc = or0IfFirstElement(deathCasesInc, firstElementDate)
     val newPcrPositiveInc = or0IfFirstElement(pcrPositiveInc, firstElementDate)
     var newTestAcPositiveInc = or0IfFirstElement(testAcPositiveInc, firstElementDate)
+    val newOtherTestsInc = or0IfFirstElement(otherTestsInc, firstElementDate)
+    val newUnknownTestsInc = or0IfFirstElement(unknownSourcePositiveInc, firstElementDate)
 
     // Data exceptions to improve visualization
-    newHospitalCasesInc = or0ByAreaAndDate(newHospitalCasesInc, MADRID, 2020, 4, 26)
-    newUciCasesInc = or0ByAreaAndDate(newUciCasesInc, MADRID, 2020, 4, 26)
     newTestAcPositiveInc = or0ByAreaAndDate(newTestAcPositiveInc, MADRID, 2020, 4, 18)
 
 
     return CovidDataResponse(
-            area, isoDate, totalCases, newTotalCasesInc, hospitalCases, newHospitalCasesInc, uciCases, newUciCasesInc,
-            deathCases, newDeathCasesInc, pcrPositive, newPcrPositiveInc,
-            testAcPositive, newTestAcPositiveInc
+            area, isoDate, totalCases, newTotalCasesInc,pcrPositive, newPcrPositiveInc,
+            testAcPositive, newTestAcPositiveInc, otherTests, newOtherTestsInc,
+            unknownSourcePositive, newUnknownTestsInc
     )
 }
 

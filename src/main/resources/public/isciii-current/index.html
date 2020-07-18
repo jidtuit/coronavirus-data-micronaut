@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Covid data for Spain</title>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="myApp" v-cloak>
+    <h1>Covid-19 in Spain</h1>
+    <div>
+        <h2>Data from the government</h2>
+        <div>
+            <p> Covid-19 data last update: {{ metadata.dataDate }} </p>
+            <label for="regionSelect">Choose a region: </label>
+            <select id="regionSelect" @change="changeRegion">
+                <option v-for="region in regions"
+                        :key="region"
+                        :value="region"
+                        :selected="region === selectedRegion">
+                    {{ lit.regions[region] }}
+                </option>
+            </select>
+        </div>
+        <div class="container">
+            <div v-for="chartId in charts" class="containerItem">
+                <canvas :id="chartId"></canvas>
+            </div>
+        </div>
+        <div>
+            <h2>Considerations about data</h2>
+            <p> Covid-19 Dataset: <a :href="metadata.dataUrl"> {{ metadata.dataUrl }}</a> </p>
+            <p> Last update: {{ metadata.dataDate }} (spanish timezone)</p>
+            <p> The highest value has been removed to avoid the
+                "change in criteria effect". The only exception for this is the recovered cases daily variation</p>
+            <p> Data notes: </p>
+            <ul>
+                <li v-for="note in metadata.notes">
+                    {{ note }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/lib/Chart.bundle.min.js"></script>
+<script src="js/app.js" type="module"></script>
+</body>
+</html>

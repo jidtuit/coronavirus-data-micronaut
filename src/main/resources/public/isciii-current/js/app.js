@@ -5,8 +5,8 @@ import { regionsLit, chartTypes } from "./modules/constants.js"
 const app = new Vue({
     el: "#myApp",
     data: {
-        url: "/covid/isciii-old/",
-        metadataUrl: "/covid/isciii-old/metadata",
+        url: "/covid/isciii-current/",
+        metadataUrl: "/covid/isciii-current/metadata",
         allData: [],
         selectedData: {},
         regions: [],
