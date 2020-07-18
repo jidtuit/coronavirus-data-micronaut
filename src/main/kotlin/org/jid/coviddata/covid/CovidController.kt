@@ -24,6 +24,8 @@ class CovidController(private val service: CovidService){
         val firstDate = dataList[0].dataDate
         val responseList = dataList.map { it.toResponse(firstDate) }
 
+        print("hola mundo")
+
         return responseList.groupBy { it.area }
     }
 

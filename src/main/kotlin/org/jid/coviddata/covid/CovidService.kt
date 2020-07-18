@@ -45,7 +45,6 @@ class CovidService(private val parser: CovidParser) {
     private suspend fun fetchData(url: String, charset: Charset = StandardCharsets.UTF_8): String = coroutineScope {
         withContext(Dispatchers.IO) {
             val readText = URL(url).readText(charset)
-            //println("readText = ${readText}")
             readText
         }
     }

@@ -28,10 +28,6 @@ dependencies {
     developmentOnly "io.micronaut:micronaut-runtime-osx"
     developmentOnly "net.java.dev.jna:jna"
     developmentOnly "io.methvin:directory-watcher"
-    /*implementation "io.micronaut:micronaut-runtime-osx:$micronautVersion"
-    implementation "net.java.dev.jna:jna"
-    implementation "io.methvin:directory-watcher"
-    */
 
     implementation enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion")
     implementation "io.micronaut:micronaut-http-client"
