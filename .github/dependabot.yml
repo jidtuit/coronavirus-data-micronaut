@@ -1,0 +1,22 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.fasterxml.jackson.module:jackson-module-kotlin
+    versions:
+    - 2.12.1
+    - 2.12.2
+  - dependency-name: io.mockk:mockk
+    versions:
+    - 1.10.5
+    - 1.10.6
+  - dependency-name: org.jetbrains.kotlinx:kotlinx-coroutines-core
+    versions:
+    - 1.4.2-native-mt
+  - dependency-name: com.github.johnrengelman.shadow
+    versions:
+    - 6.1.0
